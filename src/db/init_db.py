@@ -8,7 +8,6 @@ def main():
     sql = schema_path.read_text(encoding="utf-8")
 
     with engine.begin() as conn:
-        # Execute multiple statements safely
         for stmt in [s.strip() for s in sql.split(";") if s.strip()]:
             conn.execute(text(stmt))
 

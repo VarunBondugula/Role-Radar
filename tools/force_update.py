@@ -7,7 +7,7 @@ if ROOT_DIR not in sys.path:
 
 from src.db.engine import get_engine
 
-job_key = "databricks:8358626002"  # <-- change this
+job_key = "databricks:8358626002"  
 
 engine = get_engine()
 with engine.begin() as conn:

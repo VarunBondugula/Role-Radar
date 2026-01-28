@@ -1,7 +1,5 @@
--- Extensions (pgvector for future phases; safe to enable now)
 CREATE EXTENSION IF NOT EXISTS vector;
 
--- Raw job payloads from Greenhouse
 CREATE TABLE IF NOT EXISTS jobs_raw (
   job_key TEXT PRIMARY KEY,
   company_slug TEXT NOT NULL,
@@ -18,7 +16,6 @@ CREATE TABLE IF NOT EXISTS jobs_raw (
 CREATE INDEX IF NOT EXISTS idx_jobs_raw_company_slug ON jobs_raw(company_slug);
 CREATE INDEX IF NOT EXISTS idx_jobs_raw_last_seen ON jobs_raw(last_seen_at);
 
--- Normalized job text used for display + later ML features
 CREATE TABLE IF NOT EXISTS jobs_normalized (
   job_key TEXT PRIMARY KEY REFERENCES jobs_raw(job_key) ON DELETE CASCADE,
   title TEXT NOT NULL,
@@ -34,7 +31,6 @@ CREATE TABLE IF NOT EXISTS jobs_normalized (
 CREATE INDEX IF NOT EXISTS idx_jobs_norm_is_us ON jobs_normalized(is_us);
 CREATE INDEX IF NOT EXISTS idx_jobs_norm_posted ON jobs_normalized(posted_at);
 
--- Ingestion runs
 CREATE TABLE IF NOT EXISTS ingest_runs (
   run_id UUID PRIMARY KEY,
   started_at TIMESTAMPTZ NOT NULL,

@@ -12,7 +12,6 @@ engine = get_engine()
 col1, col2 = st.columns([1, 2])
 with col1:
     if st.button("🔄 Refresh Jobs (run ingest)"):
-        # Runs your Phase 1 ingest script
         result = subprocess.run(["python", "-m", "src.ingestion.ingest_jobs"], capture_output=True, text=True)
         if result.returncode == 0:
             st.success("Ingest completed.")
@@ -22,7 +21,6 @@ with col1:
             st.code(result.stderr)
 
 with col2:
-    # Latest ingest summary
     with engine.begin() as conn:
         row = conn.execute(text("""
           SELECT run_id, started_at, finished_at, jobs_fetched, jobs_new, jobs_updated, errors, report_path
@@ -37,7 +35,6 @@ with col2:
     else:
         st.warning("No ingest runs found yet. Click Refresh Jobs.")
 
-# Filters
 with engine.begin() as conn:
     companies = conn.execute(text("SELECT DISTINCT company_name FROM jobs_raw ORDER BY company_name")).scalars().all()
 
@@ -84,7 +81,6 @@ with engine.begin() as conn:
 st.write(f"Showing **{len(df)}** jobs")
 st.dataframe(df, use_container_width=True)
 
-# Detail view
 job_key = st.selectbox("Open job_key", ["(None)"] + df["job_key"].tolist() if len(df) else ["(None)"])
 if job_key != "(None)":
     with engine.begin() as conn:

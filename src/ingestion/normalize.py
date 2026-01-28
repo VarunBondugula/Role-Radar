@@ -18,7 +18,7 @@ def clean_html(html: Optional[str]) -> str:
     return txt
 
 def primary_location_from_payload(job: Dict[str, Any]) -> str:
-    # embed payload often has: location: { name: "City, State" } or a string
+
     loc = job.get("location")
     if isinstance(loc, dict):
         return (loc.get("name") or "").strip()
@@ -31,7 +31,7 @@ def is_us_location(primary_location: str) -> bool:
         return False
     if any(h.lower() in primary_location.lower() for h in US_HINTS):
         return True
-    # crude heuristic: contains ", <2-letter state>" in many postings
+
     return bool(re.search(r",\s*[A-Z]{2}\b", primary_location))
 
 def build_job_text(title: str, primary_location: str, description_text: str) -> str:
@@ -54,7 +54,7 @@ def normalize_job(company_slug: str, company_name: str, job: Dict[str, Any]) -> 
     title = (job.get("title") or "").strip()
     url = job.get("absolute_url") or job.get("url")
 
-    # embed payload sometimes contains "content" (html). If not, we store empty for Phase 1.
+    
     description_html = job.get("content") or ""
     description_text = clean_html(description_html)
 
@@ -96,7 +96,7 @@ def normalize_job(company_slug: str, company_name: str, job: Dict[str, Any]) -> 
         "is_us": is_us,
         "description_text": description_text,
         "job_text": job_text,
-        "posted_at": posted_at,         # embed payload may not include posted date; fill later if available
+        "posted_at": posted_at,        
         "updated_at": t,
     }
 
