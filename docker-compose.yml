@@ -1,0 +1,15 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: roleradar_db
+    environment:
+      POSTGRES_USER: roleradar
+      POSTGRES_PASSWORD: roleradar
+      POSTGRES_DB: roleradar
+    ports:
+      - "5432:5432"
+    volumes:
+      - roleradar_db_data:/var/lib/postgresql/data
+
+volumes:
+  roleradar_db_data:
