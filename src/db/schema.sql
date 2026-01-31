@@ -43,3 +43,20 @@ CREATE TABLE IF NOT EXISTS ingest_runs (
 );
 
 CREATE INDEX IF NOT EXISTS idx_ingest_runs_started ON ingest_runs(started_at);
+
+CREATE TABLE IF NOT EXISTS embedding_runs (
+  embedding_run_id UUID PRIMARY KEY,
+  model_name TEXT NOT NULL,
+  dim INT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS job_embeddings (
+  job_key TEXT NOT NULL REFERENCES jobs_raw(job_key) ON DELETE CASCADE,
+  embedding_run_id UUID NOT NULL REFERENCES embedding_runs(embedding_run_id) ON DELETE CASCADE,
+  model_name TEXT NOT NULL,
+  embedding vector NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL,
+  PRIMARY KEY (job_key, embedding_run_id)
+);
+
